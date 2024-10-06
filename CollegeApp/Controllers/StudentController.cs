@@ -18,7 +18,7 @@ namespace CollegeApp.Controllers
         }
 
         [HttpGet]
-        [Route("{İd:int}", Name = "GeStudentById")]
+        [Route("{İd:int}", Name = "GeStudentById")] 
         public ActionResult<Student> GeStudentById(int id)
         {
             // BadRequest - 400 - Badrequest - Client error
