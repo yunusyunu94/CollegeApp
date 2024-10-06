@@ -18,7 +18,11 @@ namespace CollegeApp.Controllers
         }
 
         [HttpGet]
-        [Route("{İd:int}", Name = "GeStudentById")] 
+        [Route("{İd:int}", Name = "GeStudentById")]
+        [ProducesResponseType(StatusCodes.Status200OK )]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
         public ActionResult<Student> GeStudentById(int id)
         {
             // BadRequest - 400 - Badrequest - Client error
@@ -37,6 +41,10 @@ namespace CollegeApp.Controllers
         }
 
         [HttpGet("{name:alpha}", Name = "GeStudentByName")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
         public ActionResult<Student> GeStudentByName(string name)
         {
             // BadRequest - 400 - Badrequest - Client error
@@ -55,6 +63,10 @@ namespace CollegeApp.Controllers
         }
 
         [HttpDelete("{İd:min(1):max(100)}", Name = "DeleteStudentById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
         public ActionResult<bool> DeleteStudent(int id)
         {
             // BadRequest - 400 - Badrequest - Client error
