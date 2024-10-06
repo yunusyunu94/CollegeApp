@@ -57,7 +57,7 @@ namespace CollegeApp.Controllers
                 // NotFound - 404 - NotFound - Client error
                 return NotFound($"The student with name {name} not fount");
 
-            // Ok - 200 - Success
+            // Ok - 200 - Success 
             return Ok(student);
 
         }
