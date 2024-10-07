@@ -24,7 +24,7 @@ namespace CollegeApp.Controllers
             //        Email = item.Email,
             //    };
 
-            //    students.Add(obj);
+            //    students.Add(obj); 
             //}
 
 
