@@ -1,25 +1,61 @@
 ﻿using CollegeApp.Models;
+using CollegeApp.Models.Dtos.Student;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CollegeApp.Controllers
 {
-   // [Route("api/[Controller]")]
+    // [Route("api/[Controller]")]
     [ApiController]
     public class StudentController : ControllerBase
     {
         [HttpGet]
         [Route("All", Name = "GeAllStudents")]
-        public ActionResult<IEnumerable<Student>> GeStudents()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
+
+        public ActionResult<IEnumerable<StudentDTO>> GeStudents()
         {
+            //var students = new List<StudentDTO>();
+            //foreach (var item in CollegeRepository.Students)
+            //{
+            //    StudentDTO obj = new StudentDTO()
+            //    {
+            //        Id = item.Id,
+            //        SutudentName = item.SutudentName,
+            //        Address = item.Address,
+            //        Email = item.Email,
+            //    };
+
+            //    students.Add(obj); 
+            //}
+
+
+            var students = CollegeRepository.Students.Select(s => new StudentDTO()
+            {
+                Id = s.Id,
+                SutudentName = s.SutudentName,
+                Address = s.Address,
+                Email = s.Email,
+            });
+
+
+
             // Ok - 200 - Success
-            return Ok(CollegeRepository.Students);
+            return Ok(students);
 
         }
 
         [HttpGet]
-        [Route("{İd:int}", Name = "GeStudentById")] 
-        public ActionResult<Student> GeStudentById(int id)
+        [Route("{İd:int}", Name = "GeStudentById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
+
+        public ActionResult<StudentDTO> GeStudentById(int id)
         {
             // BadRequest - 400 - Badrequest - Client error
             if (id <= 0)
@@ -31,13 +67,27 @@ namespace CollegeApp.Controllers
                 return NotFound($"The student with id {id} not fount");
 
 
+            var studentsDTO = new StudentDTO()
+            {
+                Id = student.Id,
+                SutudentName = student.SutudentName,
+                Address = student.Address,
+                Email = student.Email
+            };
+
+
             // Ok - 200 - Success
-            return Ok(student);
+            return Ok(studentsDTO);
 
         }
 
         [HttpGet("{name:alpha}", Name = "GeStudentByName")]
-        public ActionResult<Student> GeStudentByName(string name)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
+
+        public ActionResult<StudentDTO> GeStudentByName(string name)
         {
             // BadRequest - 400 - Badrequest - Client error
             if (string.IsNullOrEmpty(name))
@@ -49,12 +99,27 @@ namespace CollegeApp.Controllers
                 // NotFound - 404 - NotFound - Client error
                 return NotFound($"The student with name {name} not fount");
 
+
+            var studentsDTO = new StudentDTO()
+            {
+                Id = student.Id,
+                SutudentName = student.SutudentName,
+                Address = student.Address,
+                Email = student.Email
+            };
+
+
             // Ok - 200 - Success
-            return Ok(student);
+            return Ok(studentsDTO);
 
         }
 
         [HttpDelete("{İd:min(1):max(100)}", Name = "DeleteStudentById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
+
         public ActionResult<bool> DeleteStudent(int id)
         {
             // BadRequest - 400 - Badrequest - Client error
@@ -70,7 +135,7 @@ namespace CollegeApp.Controllers
             CollegeRepository.Students.Remove(student);
 
             // Ok - 200 - Success
-            return true; 
+            return true;
 
         }
     }
