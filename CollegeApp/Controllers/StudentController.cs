@@ -77,7 +77,7 @@ namespace CollegeApp.Controllers
 
 
             // Ok - 200 - Success
-            return Ok(studentsDTO);
+            return Ok(studentsDTO); 
 
         }
 
