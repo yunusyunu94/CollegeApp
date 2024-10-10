@@ -82,12 +82,15 @@ namespace CollegeApp.Controllers
         }
 
 
+
+
+
         [HttpPost]
         [Route("Create")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
-        public ActionResult<StudentDTO> CreateStudent([FromBody]StudentDTO model) // FromBody Sadece govde den almak istiyorum
+        public ActionResult<StudentDTO> CreateStudent([FromBody] StudentDTO model) // FromBody Sadece govde den almak istiyorum
         {
             if (model == null)
                 return BadRequest();
@@ -107,6 +110,7 @@ namespace CollegeApp.Controllers
 
             return Ok(student);
         }
+
 
 
 
