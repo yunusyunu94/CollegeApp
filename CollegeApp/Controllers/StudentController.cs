@@ -77,9 +77,39 @@ namespace CollegeApp.Controllers
 
 
             // Ok - 200 - Success
-            return Ok(studentsDTO);
+            return Ok(studentsDTO); 
 
         }
+
+
+        [HttpPost]
+        [Route("Create")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
+        public ActionResult<StudentDTO> CreateStudent([FromBody]StudentDTO model) // FromBody Sadece govde den almak istiyorum
+        {
+            if (model == null)
+                return BadRequest();
+
+            int newıd = CollegeRepository.Students.LastOrDefault().Id + 1;
+            Student student = new Student()
+            {
+                Id = newıd,
+                SutudentName = model.SutudentName,
+                Address = model.Address,
+                Email = model.Email
+            };
+
+            CollegeRepository.Students.Add(student);
+
+            model.Id = student.Id;
+
+            return Ok(student);
+        }
+
+
+
 
         [HttpGet("{name:alpha}", Name = "GeStudentByName")]
         [ProducesResponseType(StatusCodes.Status200OK)]
