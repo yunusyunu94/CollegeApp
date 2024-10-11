@@ -105,7 +105,14 @@ namespace CollegeApp.Controllers
 
             model.Id = student.Id;
 
-            return Ok(student);
+            // Status - 201
+            // https://localhost:7185/api/Student/3
+            // New student details
+
+            model.Id = student.Id;
+
+            return CreatedAtRoute("GeStudentById", new { İd = model.Id }, model); // Yeni olusturulan kaydi almak icin baglantiyi hazirlayacak
+            //return Ok(student);
         }
 
 
