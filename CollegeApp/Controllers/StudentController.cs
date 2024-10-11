@@ -95,7 +95,7 @@ namespace CollegeApp.Controllers
             if (model == null)
                 return BadRequest();
 
-            int newıd = CollegeRepository.Students.LastOrDefault().Id + 1;
+            int newıd = CollegeRepository.Students.LastOrDefault().Id + 1; // İd yi elle 1 arttirdik
             Student student = new Student()
             {
                 Id = newıd,
