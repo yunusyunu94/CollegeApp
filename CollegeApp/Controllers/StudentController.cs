@@ -150,7 +150,32 @@ namespace CollegeApp.Controllers
         }
 
 
+        [HttpPut]
+        [Route("Update")]
+        // api/student/update
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
+        public ActionResult UpdateStudent([FromBody] StudentDTO model)
+        {
+            if (model == null || model.Id <= 0)
+                BadRequest();
 
+            var exisingStudent = CollegeRepository.Students.Where(s => s.Id == model.Id).FirstOrDefault();
+
+            if (exisingStudent == null)
+                return NotFound();
+
+            exisingStudent.SutudentName = model.SutudentName;
+            exisingStudent.Email = model.Email;
+            exisingStudent.Address = model.Address;
+
+            return NoContent(); // Kayit guncellendi kayit yok yani icerik geri dondurmemize gerek yoksa bu sekilde yazabiliriz
+                                // Geri donus 204 alicaz yani guncelleme basarili icerik yor
+
+
+        }
 
 
         [HttpGet("{name:alpha}", Name = "GeStudentByName")]
