@@ -109,6 +109,24 @@ namespace CollegeApp.Controllers
             if (model == null)
                 return BadRequest();
 
+            ///
+
+            //// 1. Model duruma hata mesajı eklemek
+            //if (model.AdmissionDate <= DateTime.Now)
+            //{
+            //    // 1. Model duruma hata mesajı eklemek
+            //    ModelState.AddModelError("AdmissionDate error", "Admission date must be greater than or equal to todays date");
+            //    return BadRequest(ModelState);
+
+            //    // 2. Ozel metrigi kullanarak ozel niteligi kullanmaktir.
+            //}
+
+            // 2. Ozel metrigi kullanarak ozel niteligi kullanmaktir.
+            // Validators klasoru ekliiyoruz tum islimler orada
+
+            ///
+
+
             int newıd = CollegeRepository.Students.LastOrDefault().Id + 1; // İd yi elle 1 arttirdik
             Student student = new Student
             {
