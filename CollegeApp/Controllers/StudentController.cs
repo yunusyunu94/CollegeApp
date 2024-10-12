@@ -93,6 +93,18 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
         public ActionResult<StudentDTO> CreateStudent([FromBody] StudentDTO model) // FromBody Sadece govde den almak istiyorum
         {
+            /// Validationlari;
+            
+            // Yukaridaki [ApiController]  Yazmazsak " StudentDTO " yazdigimiz Validationlari calistirmak icin assagidaki
+            // kontrolu yazmamiz lazim ;
+            //if (!ModelState.IsValid)
+            //    return BadRequest(ModelState);
+
+            ///
+
+
+
+
             if (model == null)
                 return BadRequest();
 
