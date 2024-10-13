@@ -21,10 +21,10 @@ namespace CollegeApp.Models.Dtos.Student
         [Required]
         public string Address { get; set; }
         [Required]
-        public string Password { get; set; }
+        public int Password { get; set; }
 
         [Required]
         [Compare(nameof(Password))]
-        public string ConfirmPassword { get; set; }
+        public int ConfirmPassword { get; set; }
     }
 }
