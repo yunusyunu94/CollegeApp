@@ -1,6 +1,7 @@
 ﻿using CollegeApp.Models;
 using CollegeApp.Models.Dtos.Student;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CollegeApp.Controllers
@@ -176,6 +177,65 @@ namespace CollegeApp.Controllers
 
 
         }
+
+
+        // Assagidaki kod update de sadece 1 alani güncelleniyorsa tum verileri sunucuya gondermemk istiyorsak sadece guncellenen alanlara islem yapilmasi icin
+        // 2 paket yuklememiz gerekiyor ;
+        // 1.cisi Microsoft.AspNetCore.JsonPatch
+        // 2.cisi Microsoft.AspNetCore.Mvc.NewtonsoftJson
+        // paketleri yukledikten sonra program.cs icerisine " .AddNewtonsoftJson() " eklememiz gerekiyor
+        [HttpPatch]
+        [Route("{id:int}/UpdatePrtial")]
+        // api/student/1/updatepartial
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
+        public ActionResult UpdateStudentPartial(int id, [FromBody] JsonPatchDocument<StudentDTO> patchDocument)
+        {
+            if (patchDocument == null || id <= 0)
+                BadRequest();
+
+            var exisingStudent = CollegeRepository.Students.Where(s => s.Id == id).FirstOrDefault();
+
+            if (exisingStudent == null)
+                return NotFound();
+
+
+            var studentdDTO = new StudentDTO
+            {
+                Id = exisingStudent.Id,
+                SutudentName = exisingStudent.SutudentName,
+                Email = exisingStudent.Email,
+                Address = exisingStudent.Address,
+                Age = exisingStudent.Age,
+                Password = exisingStudent.Password,
+                ConfirmPassword = exisingStudent.ConfirmPassword,
+                AdmissionDate = exisingStudent.AdmissionDate,
+            };
+
+            patchDocument.ApplyTo(studentdDTO, ModelState);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+            exisingStudent.SutudentName = studentdDTO.SutudentName;
+            exisingStudent.Email = studentdDTO.Email;
+            exisingStudent.Address = studentdDTO.Address;
+            exisingStudent.Age = studentdDTO.Age;
+            exisingStudent.Password = studentdDTO.Password;
+            exisingStudent.ConfirmPassword = studentdDTO.ConfirmPassword;
+            exisingStudent.AdmissionDate = studentdDTO.AdmissionDate;
+
+            // 204 - NoContent
+            return NoContent(); // Kayit guncellendi kayit yok yani icerik geri dondurmemize gerek yoksa bu sekilde yazabiliriz
+                                // Geri donus 204 alicaz yani guncelleme basarili icerik yor
+
+
+        }
+
+
 
 
         [HttpGet("{name:alpha}", Name = "GeStudentByName")]
