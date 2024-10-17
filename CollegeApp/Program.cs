@@ -5,7 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Posmanda jsondan baska formatlar de mesela XML format yoksa assagidaki kod sorgulucak ve hata firlaticak - 406 hatasi 
-builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true).AddNewtonsoftJson();
+builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true)
+    .AddNewtonsoftJson()
+    .AddXmlDataContractSerializerFormatters(); // XML formati icin bunu eklememiz gerekiyor
 
 
 
