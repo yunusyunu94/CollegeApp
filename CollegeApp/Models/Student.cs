@@ -8,7 +8,7 @@
         public string Address { get; set; }
         public int Age { get; set; }
         public int Password { get; set; }
-        public int ConfirmPassword { get; set; }
-        public DateTime AdmissionDate { get; set; }
+        //public int ConfirmPassword { get; set; }
+        //public DateTime AdmissionDate { get; set; }
     }
 }

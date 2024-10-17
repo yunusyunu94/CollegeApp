@@ -16,19 +16,19 @@ namespace CollegeApp.Models.Dtos.Student
         [EmailAddress(ErrorMessage = "Please anter valid email address")]
         public string Email { get; set; }
 
-        [Range(10,20)]
+        //[Range(10,20)]
         public int Age { get; set; }
 
-        [Required]
+        //[Required]
         public string Address { get; set; }
-        [Required]
+        //[Required]
         public int Password { get; set; }
 
-        [Required]
+        //[Required]
         [Compare(nameof(Password))]
         public int ConfirmPassword { get; set; }
 
-        [DateCheck]
-        public DateTime AdmissionDate { get; set; }
+        //[DateCheck]
+        //public DateTime AdmissionDate { get; set; }
     }
 }
