@@ -210,8 +210,8 @@ namespace CollegeApp.Controllers
                 Address = exisingStudent.Address,
                 Age = exisingStudent.Age,
                 Password = exisingStudent.Password,
-                ConfirmPassword = exisingStudent.ConfirmPassword,
-                AdmissionDate = exisingStudent.AdmissionDate,
+                //ConfirmPassword = exisingStudent.ConfirmPassword,
+                //AdmissionDate = exisingStudent.AdmissionDate,
             };
 
             patchDocument.ApplyTo(studentdDTO, ModelState);
@@ -225,8 +225,8 @@ namespace CollegeApp.Controllers
             exisingStudent.Address = studentdDTO.Address;
             exisingStudent.Age = studentdDTO.Age;
             exisingStudent.Password = studentdDTO.Password;
-            exisingStudent.ConfirmPassword = studentdDTO.ConfirmPassword;
-            exisingStudent.AdmissionDate = studentdDTO.AdmissionDate;
+            //exisingStudent.ConfirmPassword = studentdDTO.ConfirmPassword;
+            //exisingStudent.AdmissionDate = studentdDTO.AdmissionDate;
 
             // 204 - NoContent
             return NoContent(); // Kayit guncellendi kayit yok yani icerik geri dondurmemize gerek yoksa bu sekilde yazabiliriz
