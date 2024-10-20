@@ -1,5 +1,6 @@
 ﻿using CollegeApp.Models;
 using CollegeApp.Models.Dtos.Student;
+using Dependency_Injection;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,14 @@ namespace CollegeApp.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
+
+        private readonly IMyLogger _myLogger2;
+
+        public StudentController(IMyLogger myLogger)
+        {
+            _myLogger2 = myLogger;
+        }
+
         [HttpGet]
         [Route("All", Name = "GeAllStudents")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -19,6 +28,8 @@ namespace CollegeApp.Controllers
 
         public ActionResult<IEnumerable<StudentDTO>> GeStudents()
         {
+            _myLogger2.Log("Your Message");
+
             //var students = new List<StudentDTO>();
             //foreach (var item in CollegeRepository.Students)
             //{

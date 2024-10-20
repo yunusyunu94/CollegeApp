@@ -1,3 +1,5 @@
+using Dependency_Injection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,6 +16,15 @@ builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = tru
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
+// DEMOController de 2. ciklama ;
+builder.Services.AddScoped<IMyLogger, LogToFile>();
+
+
+
+
 
 var app = builder.Build();
 
