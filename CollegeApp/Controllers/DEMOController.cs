@@ -8,27 +8,54 @@ namespace CtyApi.Controllers
     [ApiController]
     public class DEMOController : ControllerBase
     {
-        //1. Strong coupled / tightly coupled
+        /// <summary>
+        
+        ///  ------------------------------------- Dependency Injection ; ---------------------------------------------------
+          
+         
+        ///  1. Strong coupled / tightly coupled
 
-        private readonly IMyLogger _myLogger;
+        //private readonly IMyLogger _myLogger;
 
-        public DEMOController()
+        //public DEMOController()
+        //{
+        //    _myLogger = new LogToFile();
+        //}
+
+        //[HttpGet]
+        //public ActionResult Index()
+        //{
+        //    _myLogger.Log("Index method stated");
+        //    return Ok();
+        //}
+
+
+
+
+        // 2. Loosely coupled
+
+        
+        private readonly IMyLogger _myLogger2;
+
+        public DEMOController(IMyLogger myLogger)
         {
-            _myLogger = new LogToFile();
+            _myLogger2 = myLogger;
         }
 
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index2()
         {
-            _myLogger.Log("Index method stated");
+            _myLogger2.Log("Index method stated");
             return Ok();
         }
 
+        // Sonra Program.cs
+
+
+        /// </summary>
 
 
 
 
-
-        //2. Loosely coupled
     }
 }
