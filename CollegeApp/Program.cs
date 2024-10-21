@@ -1,5 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Loggin kisitlama
+builder.Logging.ClearProviders();  // 4 saglayiciyi temizledik Bunlar ; Console, Debug, EventSource, EventLog:Wþndows  only
+builder.Logging.AddConsole(); // Sadece Consolo giriþ yapicaksin
+// builder.Logging.AddDebug(); // Sadece hata ayiklamaya giris yapar
+    
 // Add services to the container.
 
 

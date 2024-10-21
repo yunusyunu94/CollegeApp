@@ -1,5 +1,6 @@
 ﻿using CollegeApp.Models;
 using CollegeApp.Models.Dtos.Student;
+using Dependency_Injection;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,23 @@ namespace CollegeApp.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
+
+        private readonly ILogger<StudentController> _logger;
+
+        public StudentController(ILogger<StudentController> logger)
+        {
+            this._logger = logger;
+        }
+
+
+
+        //private readonly IMyLogger _myLogger2;
+
+        //public StudentController(IMyLogger myLogger)
+        //{
+        //    _myLogger2 = myLogger;
+        //}
+
         [HttpGet]
         [Route("All", Name = "GeAllStudents")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -19,6 +37,10 @@ namespace CollegeApp.Controllers
 
         public ActionResult<IEnumerable<StudentDTO>> GeStudents()
         {
+            //_myLogger2.Log("Your Message");
+
+            _logger.LogInformation("GeStudents method started");
+
             //var students = new List<StudentDTO>();
             //foreach (var item in CollegeRepository.Students)
             //{
@@ -60,12 +82,23 @@ namespace CollegeApp.Controllers
         {
             // BadRequest - 400 - Badrequest - Client error
             if (id <= 0)
+            {
+                _logger.LogWarning(" Bad Request ");
+
                 return BadRequest();
+            }
+
 
             var student = CollegeRepository.Students.Where(x => x.Id == id).FirstOrDefault();
+
+            // NotFound - 404 - NotFound - Client error
             if (student == null)
-                // NotFound - 404 - NotFound - Client error
+            {
+                _logger.LogError(" Student not fount with given ID ");
+
                 return NotFound($"The student with id {id} not fount");
+            }
+                
 
 
             var studentsDTO = new StudentDTO()
@@ -78,7 +111,7 @@ namespace CollegeApp.Controllers
 
 
             // Ok - 200 - Success
-            return Ok(studentsDTO); 
+            return Ok(studentsDTO);
 
         }
 
@@ -95,7 +128,7 @@ namespace CollegeApp.Controllers
         public ActionResult<StudentDTO> CreateStudent([FromBody] StudentDTO model) // FromBody Sadece govde den almak istiyorum
         {
             /// Validationlari;
-            
+
             // Yukaridaki [ApiController]  Yazmazsak " StudentDTO " yazdigimiz Validationlari calistirmak icin assagidaki
             // kontrolu yazmamiz lazim ;
             //if (!ModelState.IsValid)
