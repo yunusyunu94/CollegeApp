@@ -35,17 +35,22 @@ namespace CtyApi.Controllers
         // 2. Loosely coupled
 
         
-        private readonly IMyLogger _myLogger2;
+        private readonly ILogger<DEMOController> _logger;
 
-        public DEMOController(IMyLogger myLogger)
+        public DEMOController(ILogger<DEMOController> logger)
         {
-            _myLogger2 = myLogger;
+            _logger = logger;
         }
 
         [HttpGet]
         public ActionResult Index2()
         {
-            _myLogger2.Log("Index method stated");
+            _logger.LogTrace("Log Message from Trace method");
+            _logger.LogDebug("Log Message from Debug method");
+            _logger.LogInformation("Log Message from Information method");
+            _logger.LogWarning("Log Message from Warning method");
+            _logger.LogError("Log Message from Error method");
+            _logger.LogCritical("Log Message from Critical method");
             return Ok();
         }
 

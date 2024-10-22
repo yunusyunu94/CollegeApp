@@ -11,6 +11,12 @@ Dependency Injection ;
 3.Video https://www.youtube.com/watch?v=Z5fKICsxFPw&list=PL3ewn8T-zRWgO-GAdXjVRh-6thRog6ddg&index=28&ab_channel=NehanthWorld
 
 
+Önemli 31.video 
+https://www.youtube.com/watch?v=99YFw2Qb2Ho&list=PL3ewn8T-zRWgO-GAdXjVRh-6thRog6ddg&index=31&ab_channel=NehanthWorld
+Videodaki site;
+https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-7.0#log-levela
+
+
 
 
 
