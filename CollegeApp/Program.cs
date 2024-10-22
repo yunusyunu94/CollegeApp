@@ -1,6 +1,11 @@
-using Dependency_Injection;
-
 var builder = WebApplication.CreateBuilder(args);
+
+
+
+// Loggin kisitlama
+builder.Logging.ClearProviders();  // 4 saglayiciyi temizledik Bunlar ; Console, Debug, EventSource, EventLog:Wþndows  only
+builder.Logging.AddConsole(); // Sadece Consolo giriþ yapicaksin
+builder.Logging.AddDebug(); // Sadece hata ayiklamaya giris yapar
 
 // Add services to the container.
 
@@ -16,15 +21,6 @@ builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = tru
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-
-
-// DEMOController de 2. ciklama ;
-builder.Services.AddScoped<IMyLogger, LogToFile>();
-
-
-
-
 
 var app = builder.Build();
 
