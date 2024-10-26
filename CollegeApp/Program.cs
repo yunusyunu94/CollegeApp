@@ -1,13 +1,42 @@
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
 
 // Loggin kisitlama
-builder.Logging.ClearProviders();  // 4 saglayiciyi temizledik Bunlar ; Console, Debug, EventSource, EventLog:Wþndows  only
-builder.Logging.AddConsole(); // Sadece Consolo giriþ yapicaksin
-builder.Logging.AddDebug(); // Sadece hata ayiklamaya giris yapar
+// builder.Logging.ClearProviders();  // 4 saglayiciyi temizledik Bunlar ; Console, Debug, EventSource, EventLog:Wþndows  only
+// builder.Logging.AddDebug(); // Sadece hata ayiklamaya giris yapar
 
 // Add services to the container.
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+// once Nugetten assagidaki paketleri kurduk 
+// Serilog.AspNetCore
+// Serilog.Sinks.File
+
+// Sonra ;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.File("Log/Log.txt", rollingInterval: RollingInterval.Minute) // Burada metin dosyasi her dakika olusturulacak (Demo icin dakika olarak ayarladim)
+    //.WriteTo.File("Log/Log.txt", rollingInterval: RollingInterval.Day) // Burada her bir gun icin metin dosyasi olusturacak
+    .CreateLogger();
+
+// Sonrasinda ;
+
+//builder.Host.UseSerilog();
+
+// Hem yerlesik hem serilog kullanmak istiyorsak;
+builder.Logging.AddSerilog();
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 
 
 
