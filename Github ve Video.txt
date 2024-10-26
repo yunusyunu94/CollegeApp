@@ -17,6 +17,11 @@ Videodaki site;
 https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-7.0#log-levela
 
 
+32.video 
+Nugetten unları kurduk
+Serilog.AspNetCore
+Serilog.Sinks.File
+
 
 
 
