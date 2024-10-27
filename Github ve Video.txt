@@ -11,16 +11,44 @@ Dependency Injection ;
 3.Video https://www.youtube.com/watch?v=Z5fKICsxFPw&list=PL3ewn8T-zRWgO-GAdXjVRh-6thRog6ddg&index=28&ab_channel=NehanthWorld
 
 
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+LOG ları yani günlük mesajları kaydetme ;
+
+-- Serilog ;
+
 Önemli 31.video 
 https://www.youtube.com/watch?v=99YFw2Qb2Ho&list=PL3ewn8T-zRWgO-GAdXjVRh-6thRog6ddg&index=31&ab_channel=NehanthWorld
 Videodaki site;
+Goog den confirigure loggin sitesine giriyoruz oradan Logging providers içerisinden biraz assagı iniyoruz  Third-party logging providers da 
+
 https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-7.0#log-levela
 
 
-32.video 
-Nugetten unları kurduk
+32.video da Serilog u ogreldik
+Nugetten bunları kurduk
 Serilog.AspNetCore
 Serilog.Sinks.File
+
+
+-- Log4Ne ;
+
+Önemli 33.video 
+https://www.youtube.com/watch?v=SkvGtIS9QvI&list=PL3ewn8T-zRWgO-GAdXjVRh-6thRog6ddg&index=33&ab_channel=NehanthWorld
+Videodaki site;
+Goog den confirigure loggin sitesine giriyoruz oradan Logging providers içerisinden biraz assagı iniyoruz  Third-party logging providers da 
+https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-7.0#third-party-logging-providers
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 
 
 

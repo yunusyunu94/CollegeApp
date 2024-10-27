@@ -21,23 +21,55 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Sonra ;
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .WriteTo.File("Log/Log.txt", rollingInterval: RollingInterval.Minute) // Burada metin dosyasi her dakika olusturulacak (Demo icin dakika olarak ayarladim)
-    //.WriteTo.File("Log/Log.txt", rollingInterval: RollingInterval.Day) // Burada her bir gun icin metin dosyasi olusturacak
-    .CreateLogger();
+//Log.Logger = new LoggerConfiguration()
+//   .MinimumLevel.Information()
+//   .WriteTo.File("Log/Log.txt", rollingInterval: RollingInterval.Minute) // Burada metin dosyasi her dakika olusturulacak (Demo icin dakika olarak ayarladim)
+//.WriteTo.File("Log/Log.txt", rollingInterval: RollingInterval.Day) // Burada her bir gun icin metin dosyasi olusturacak
+//   .CreateLogger();
 
 // Sonrasinda ;
 
 //builder.Host.UseSerilog();
 
 // Hem yerlesik hem serilog kullanmak istiyorsak;
-builder.Logging.AddSerilog();
+//builder.Logging.AddSerilog();
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 
+// Log4Ne ; 
+
+// once Nugetten assagidaki paketleri kurduk 
+// Microsoft.Extensions.Logging.Log4Net.AspNetCore
+
+// Sonra ;
+
+
+builder.Logging.AddLog4Net();
+
+// Daha sonrasin da log4net.config adinda bir konfigurasyon dosyasi olusturmamiz gerekiyor bunun icin;
+
+// projeye sag tik add New item  biraz assagýda " web configuration file  "  sablo seciyoruz ve ismine " log4net.config " veriyoruz.
+
+// https://github.com/huorswords/Microsoft.Extensions.Logging.Log4Net.AspNetCore sitedeki configuration alanini kopyalayim olusturdugumuz
+// configuration sablonun icerisini sitip yapistiriyaruz
+
+// 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 
 
