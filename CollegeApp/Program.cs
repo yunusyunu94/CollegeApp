@@ -13,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+// Serilog ;
+
 // once Nugetten assagidaki paketleri kurduk 
 // Serilog.AspNetCore
 // Serilog.Sinks.File
