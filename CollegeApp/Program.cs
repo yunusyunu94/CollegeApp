@@ -45,6 +45,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Sonra ;
 
+    builder.Logging.ClearProviders(); //dahili kaydedicileri tevizliyoruz
 
 builder.Logging.AddLog4Net();
 
@@ -55,8 +56,18 @@ builder.Logging.AddLog4Net();
 // https://github.com/huorswords/Microsoft.Extensions.Logging.Log4Net.AspNetCore sitedeki configuration alanini kopyalayim olusturdugumuz
 // configuration sablonun icerisini sitip yapistiriyaruz
 
-// 
+// Kayýt seviyelerini appsettings.json altýnda appsettings.Development.json icerisinde Information ný degistirerel seviyeyi ayarlaya biliyoruz 
+//Bunlar ;
 
+// ALL : Tüm mesajlarýn loglandýðý seviyedir.
+// DEBUG: Developement aþamasýna yönelik loglama seviyesidir.
+// INFO: Uygulamanýn çalýþmasý sýrasýnda yararlý olabileceðini düþündüðümüz durum bilgilerini loglayabileceðimiz seviyedir.
+// WARN: Hata olmayan fakat önemli bir durumun oluþtuðunu belirtebileceðimiz seviye.
+// ERROR: Hata durumunu belirten seviye. Sistem hala çalýþýr haldedir.
+// FATAL: Uygulamanýn sonlanacaðýný, faaliyet gösteremeyeceðini belirten mesajlar için kullanýlacak seviyedir.
+// OFF: Hiç bir mesajýn loglanmadýðý seviyedir.
+
+// Konsolda hicbirsey olmayacaktir konsoluda eklemek icin log4net.config icerisine yazdýk
 
 
 
