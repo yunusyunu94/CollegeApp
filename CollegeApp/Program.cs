@@ -1,3 +1,5 @@
+using CollegeApp.Data;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -82,7 +84,11 @@ builder.Logging.AddLog4Net();
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+// CollageDBContext icin servisleri eklememiz gerek ;
+builder.Services.AddDbContext<CollageDBContext>(options =>
 
+    options.UseSqlServer("Data Source=.;Initial Catalog=CollegeAppDB;Integrated Security=True;Trust Server Certificate=True")
+);
 
 
 // Posmanda jsondan baska formatlar de mesela XML format yoksa assagidaki kod sorgulucak ve hata firlaticak - 406 hatasi 
