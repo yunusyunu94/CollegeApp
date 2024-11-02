@@ -47,7 +47,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Sonra ;
 
-    builder.Logging.ClearProviders(); //dahili kaydedicileri tevizliyoruz
+builder.Logging.ClearProviders(); //dahili kaydedicileri tevizliyoruz
 
 builder.Logging.AddLog4Net();
 
@@ -84,11 +84,27 @@ builder.Logging.AddLog4Net();
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+
 // CollageDBContext icin servisleri eklememiz gerek ;
 builder.Services.AddDbContext<CollageDBContext>(options =>
+{
+    options.UseSqlServer(
+       /*"Data Source=.;Initial Catalog=CollegeAppDB;Integrated Security=True;Trust Server Certificate=True"*/ // Baglanti dizisini appsettings.json a ekledil oradan okuyacagiz
 
-    options.UseSqlServer("Data Source=.;Initial Catalog=CollegeAppDB;Integrated Security=True;Trust Server Certificate=True")
-);
+       builder.Configuration.GetConnectionString("CollegeAppDBConnection")
+
+        );
+
+
+});
+
+// Sonrasinda appsettings.json a gidicez
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 
 // Posmanda jsondan baska formatlar de mesela XML format yoksa assagidaki kod sorgulucak ve hata firlaticak - 406 hatasi 

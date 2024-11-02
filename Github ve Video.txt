@@ -35,6 +35,7 @@ Serilog.Sinks.File
 
 Önemli 33.video 
 https://www.youtube.com/watch?v=SkvGtIS9QvI&list=PL3ewn8T-zRWgO-GAdXjVRh-6thRog6ddg&index=33&ab_channel=NehanthWorld
+
 Videodaki site;
 Goog den confirigure loggin sitesine giriyoruz oradan Logging providers içerisinden biraz assagı iniyoruz  Third-party logging providers da 
 https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-7.0#third-party-logging-providers
