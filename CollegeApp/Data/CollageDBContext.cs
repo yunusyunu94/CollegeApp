@@ -14,6 +14,8 @@ namespace CollegeApp.Data
 
         // Program.cs de servisi eklememiz gerekiyor
 
+
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Student>().HasData(new List<Student>()
@@ -34,7 +36,17 @@ namespace CollegeApp.Data
                     DOB= new DateTime(2024,6,12)
 
                 },
+            });  // Elle veri girisi yaptik;
+
+
+            modelBuilder.Entity<Student>(entity =>
+            {
+                entity.Property(n => n.SutudentName).IsRequired();
+                entity.Property(n => n.SutudentName).HasMaxLength(250);
+                entity.Property(n => n.Address).IsRequired(false).HasMaxLength(500);
+                entity.Property(n => n.Email).IsRequired().HasMaxLength(250);
             });
+
         }
 
     }
