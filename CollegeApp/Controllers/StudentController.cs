@@ -1,4 +1,5 @@
-﻿using CollegeApp.Models;
+﻿using CollegeApp.Data;
+using CollegeApp.Models;
 using CollegeApp.Models.Dtos.Student;
 using Dependency_Injection;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -13,10 +14,12 @@ namespace CollegeApp.Controllers
     {
 
         private readonly IMyLogger _myLogger2;
+        private readonly CollageDBContext _dBContext;
 
-        public StudentController(IMyLogger myLogger)
+        public StudentController(IMyLogger myLogger, CollageDBContext dBContext)
         {
             _myLogger2 = myLogger;
+            _dBContext = dBContext;
         }
 
         [HttpGet]
@@ -45,12 +48,13 @@ namespace CollegeApp.Controllers
             //}
 
 
-            var students = CollegeRepository.Students.Select(s => new StudentDTO()
+            var students = _dBContext.Students.Select(s => new StudentDTO()
             {
                 Id = s.Id,
                 SutudentName = s.SutudentName,
                 Address = s.Address,
                 Email = s.Email,
+                DOB= s.DOB,
             });
 
 
@@ -73,7 +77,7 @@ namespace CollegeApp.Controllers
             if (id <= 0)
                 return BadRequest();
 
-            var student = CollegeRepository.Students.Where(x => x.Id == id).FirstOrDefault();
+            var student = _dBContext.Students.Where(x => x.Id == id).FirstOrDefault();
             if (student == null)
                 // NotFound - 404 - NotFound - Client error
                 return NotFound($"The student with id {id} not fount");
@@ -139,17 +143,18 @@ namespace CollegeApp.Controllers
             ///
 
 
-            int newıd = CollegeRepository.Students.LastOrDefault().Id + 1; // İd yi elle 1 arttirdik
+            /*int newıd = _dBContext.Students.LastOrDefault().Id + 1*/; // İd yi elle 1 arttirdik
             Student student = new Student
             {
-                Id = newıd,
+                
                 SutudentName = model.SutudentName,
                 Address = model.Address,
                 Email = model.Email
             };
 
-            CollegeRepository.Students.Add(student);
+            _dBContext.Students.Add(student);
 
+            _dBContext.SaveChanges();
 
             // Status - 201
             // https://localhost:7185/api/Student/3
@@ -174,7 +179,7 @@ namespace CollegeApp.Controllers
             if (model == null || model.Id <= 0)
                 BadRequest();
 
-            var exisingStudent = CollegeRepository.Students.Where(s => s.Id == model.Id).FirstOrDefault();
+            var exisingStudent = _dBContext.Students.Where(s => s.Id == model.Id).FirstOrDefault();
 
             if (exisingStudent == null)
                 return NotFound();
@@ -182,6 +187,10 @@ namespace CollegeApp.Controllers
             exisingStudent.SutudentName = model.SutudentName;
             exisingStudent.Email = model.Email;
             exisingStudent.Address = model.Address;
+            exisingStudent.DOB = model.DOB;
+
+
+            _dBContext.SaveChanges();
 
             return NoContent(); // Kayit guncellendi kayit yok yani icerik geri dondurmemize gerek yoksa bu sekilde yazabiliriz
                                 // Geri donus 204 alicaz yani guncelleme basarili icerik yor
@@ -207,7 +216,7 @@ namespace CollegeApp.Controllers
             if (patchDocument == null || id <= 0)
                 BadRequest();
 
-            var exisingStudent = CollegeRepository.Students.Where(s => s.Id == id).FirstOrDefault();
+            var exisingStudent = _dBContext.Students.Where(s => s.Id == id).FirstOrDefault();
 
             if (exisingStudent == null)
                 return NotFound();
@@ -219,8 +228,8 @@ namespace CollegeApp.Controllers
                 SutudentName = exisingStudent.SutudentName,
                 Email = exisingStudent.Email,
                 Address = exisingStudent.Address,
-                Age = exisingStudent.Age,
-                Password = exisingStudent.Password,
+                //Age = exisingStudent.Age,
+                //Password = exisingStudent.Password,
                 //ConfirmPassword = exisingStudent.ConfirmPassword,
                 //AdmissionDate = exisingStudent.AdmissionDate,
             };
@@ -234,10 +243,13 @@ namespace CollegeApp.Controllers
             exisingStudent.SutudentName = studentdDTO.SutudentName;
             exisingStudent.Email = studentdDTO.Email;
             exisingStudent.Address = studentdDTO.Address;
-            exisingStudent.Age = studentdDTO.Age;
-            exisingStudent.Password = studentdDTO.Password;
+            //exisingStudent.Age = studentdDTO.Age;
+            //exisingStudent.Password = studentdDTO.Password;
             //exisingStudent.ConfirmPassword = studentdDTO.ConfirmPassword;
             //exisingStudent.AdmissionDate = studentdDTO.AdmissionDate;
+
+
+            _dBContext.SaveChanges();
 
             // 204 - NoContent
             return NoContent(); // Kayit guncellendi kayit yok yani icerik geri dondurmemize gerek yoksa bu sekilde yazabiliriz
@@ -261,7 +273,7 @@ namespace CollegeApp.Controllers
             if (string.IsNullOrEmpty(name))
                 return BadRequest();
 
-            var student = CollegeRepository.Students.Where(x => x.SutudentName == name).FirstOrDefault();
+            var student = _dBContext.Students.Where(x => x.SutudentName == name).FirstOrDefault();
 
             if (student == null)
                 // NotFound - 404 - NotFound - Client error
@@ -295,12 +307,13 @@ namespace CollegeApp.Controllers
                 return BadRequest();
 
 
-            var student = CollegeRepository.Students.Where(x => x.Id == id).FirstOrDefault();
+            var student = _dBContext.Students.Where(x => x.Id == id).FirstOrDefault();
             if (student == null)
                 // NotFound - 404 - NotFound - Client error
                 return NotFound($"The student with id {id} not fount");
 
-            CollegeRepository.Students.Remove(student);
+            _dBContext.Students.Remove(student);
+            _dBContext.SaveChanges();
 
             // Ok - 200 - Success
             return true;

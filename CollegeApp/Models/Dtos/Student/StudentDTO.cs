@@ -9,8 +9,8 @@ namespace CollegeApp.Models.Dtos.Student
         [ValidateNever]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Student name is required")]
-        [StringLength(100)]
+        //[Required(ErrorMessage = "Student name is required")]
+        //[StringLength(100)]
         public string SutudentName { get; set; }
 
         [EmailAddress(ErrorMessage = "Please anter valid email address")]
@@ -30,5 +30,9 @@ namespace CollegeApp.Models.Dtos.Student
 
         //[DateCheck]
         //public DateTime AdmissionDate { get; set; }
+
+        public DateTime DOB { get; set; }
+
+        // Konfigurasyonlari artık datadaki configde yapiyoruz
     }
 }
