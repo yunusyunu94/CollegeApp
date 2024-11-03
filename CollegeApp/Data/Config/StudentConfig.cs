@@ -8,7 +8,7 @@ namespace CollegeApp.Data.Config
     {
         public void Configure(EntityTypeBuilder<Student> builder)
         {
-            builder.ToTable(nameof(Student));
+            builder.ToTable(nameof(Student)); 
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id).UseIdentityColumn(); // ID otamatik artsin
