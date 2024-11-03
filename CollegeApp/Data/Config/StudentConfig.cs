@@ -39,7 +39,9 @@ namespace CollegeApp.Data.Config
                     DOB= new DateTime(2024,6,12)
 
                 },
-            });  
+            });
+
+            // Artik CollegeRepository.cs den veri giriyorduk kaldirabiliriz
         }
     }
 }
