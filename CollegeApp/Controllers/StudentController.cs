@@ -5,6 +5,7 @@ using Dependency_Injection;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CollegeApp.Controllers
 {
@@ -48,16 +49,22 @@ namespace CollegeApp.Controllers
             //}
 
 
+            //var students = _dBContext.Students.Select(s => new StudentDTO()
+            //{
+            //    Id = s.Id,
+            //    SutudentName = s.SutudentName,
+            //    Address = s.Address,
+            //    Email = s.Email,
+            //    DOB= s.DOB,
+            //});
+
             var students = _dBContext.Students.Select(s => new StudentDTO()
             {
                 Id = s.Id,
                 SutudentName = s.SutudentName,
                 Address = s.Address,
-                Email = s.Email,
-                DOB= s.DOB,
-            });
-
-
+                DOB = s.DOB
+            }).ToList();
 
             // Ok - 200 - Success
             return Ok(students);
@@ -93,7 +100,7 @@ namespace CollegeApp.Controllers
 
 
             // Ok - 200 - Success
-            return Ok(studentsDTO); 
+            return Ok(studentsDTO);
 
         }
 
@@ -110,7 +117,7 @@ namespace CollegeApp.Controllers
         public ActionResult<StudentDTO> CreateStudent([FromBody] StudentDTO model) // FromBody Sadece govde den almak istiyorum
         {
             /// Validationlari;
-            
+
             // Yukaridaki [ApiController]  Yazmazsak " StudentDTO " yazdigimiz Validationlari calistirmak icin assagidaki
             // kontrolu yazmamiz lazim ;
             //if (!ModelState.IsValid)
@@ -143,13 +150,15 @@ namespace CollegeApp.Controllers
             ///
 
 
-            /*int newıd = _dBContext.Students.LastOrDefault().Id + 1*/; // İd yi elle 1 arttirdik
+            /*int newıd = _dBContext.Students.LastOrDefault().Id + 1*/
+            ; // İd yi elle 1 arttirdik
             Student student = new Student
             {
-                
+
                 SutudentName = model.SutudentName,
                 Address = model.Address,
-                Email = model.Email
+                Email = model.Email,
+                DOB = model.DOB,
             };
 
             _dBContext.Students.Add(student);
@@ -179,15 +188,33 @@ namespace CollegeApp.Controllers
             if (model == null || model.Id <= 0)
                 BadRequest();
 
-            var exisingStudent = _dBContext.Students.Where(s => s.Id == model.Id).FirstOrDefault();
+
+
+
+            var exisingStudent = _dBContext.Students.AsNoTracking().Where(s => s.Id == model.Id).FirstOrDefault();
 
             if (exisingStudent == null)
                 return NotFound();
 
-            exisingStudent.SutudentName = model.SutudentName;
-            exisingStudent.Email = model.Email;
-            exisingStudent.Address = model.Address;
-            exisingStudent.DOB = model.DOB;
+            // Yeni ogrenci ekleyelim ;
+            var newRecord = new Student()
+            {
+                Id = exisingStudent.Id,
+                SutudentName = exisingStudent.SutudentName,
+                Address = exisingStudent.Address,
+                Email = exisingStudent.Email,
+                DOB = exisingStudent.DOB,
+
+            };
+            _dBContext.Students.Update(newRecord);
+            // Burada ayni ID oldugundan hata verecektir ama AsNoTracking yani takip etme dersek varlik cercevesi izleme altinda olmayacaktir ve hata vermicektir
+
+
+
+            //exisingStudent.SutudentName = model.SutudentName;
+            //exisingStudent.Email = model.Email;
+            //exisingStudent.Address = model.Address;
+            //exisingStudent.DOB = model.DOB;
 
 
             _dBContext.SaveChanges();
@@ -228,6 +255,7 @@ namespace CollegeApp.Controllers
                 SutudentName = exisingStudent.SutudentName,
                 Email = exisingStudent.Email,
                 Address = exisingStudent.Address,
+                DOB = exisingStudent.DOB,
                 //Age = exisingStudent.Age,
                 //Password = exisingStudent.Password,
                 //ConfirmPassword = exisingStudent.ConfirmPassword,
@@ -285,7 +313,8 @@ namespace CollegeApp.Controllers
                 Id = student.Id,
                 SutudentName = student.SutudentName,
                 Address = student.Address,
-                Email = student.Email
+                Email = student.Email,
+                DOB = student.DOB,
             };
 
 
