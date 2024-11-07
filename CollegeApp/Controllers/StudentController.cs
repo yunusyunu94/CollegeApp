@@ -5,6 +5,7 @@ using Dependency_Injection;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CollegeApp.Controllers
 {
@@ -29,7 +30,7 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
 
-        public ActionResult<IEnumerable<StudentDTO>> GeStudents()
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> GeStudents()
         {
             _myLogger2.Log("Your Message");
 
@@ -48,14 +49,14 @@ namespace CollegeApp.Controllers
             //}
 
 
-            var students = _dBContext.Students.Select(s => new StudentDTO()
+            var students = await _dBContext.Students.Select(s => new StudentDTO()
             {
                 Id = s.Id,
                 SutudentName = s.SutudentName,
                 Address = s.Address,
                 Email = s.Email,
                 DOB= s.DOB,
-            });
+            }).ToListAsync();
 
 
 
@@ -71,13 +72,13 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
 
-        public ActionResult<StudentDTO> GeStudentById(int id)
+        public async Task<ActionResult<StudentDTO>> GeStudentById(int id)
         {
             // BadRequest - 400 - Badrequest - Client error
             if (id <= 0)
                 return BadRequest();
 
-            var student = _dBContext.Students.Where(x => x.Id == id).FirstOrDefault();
+            var student =await _dBContext.Students.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (student == null)
                 // NotFound - 404 - NotFound - Client error
                 return NotFound($"The student with id {id} not fount");
@@ -107,7 +108,7 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)] // Kayıt olumlu 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
-        public ActionResult<StudentDTO> CreateStudent([FromBody] StudentDTO model) // FromBody Sadece govde den almak istiyorum
+        public async Task<ActionResult<StudentDTO>> CreateStudent([FromBody] StudentDTO model) // FromBody Sadece govde den almak istiyorum
         {
             /// Validationlari;
             
@@ -152,9 +153,9 @@ namespace CollegeApp.Controllers
                 Email = model.Email
             };
 
-            _dBContext.Students.Add(student);
+            await _dBContext.Students.AddAsync(student);
 
-            _dBContext.SaveChanges();
+            await _dBContext.SaveChangesAsync();
 
             // Status - 201
             // https://localhost:7185/api/Student/3
@@ -174,12 +175,12 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
-        public ActionResult UpdateStudent([FromBody] StudentDTO model)
+        public async Task<ActionResult> UpdateStudent([FromBody] StudentDTO model)
         {
             if (model == null || model.Id <= 0)
                 BadRequest();
 
-            var exisingStudent = _dBContext.Students.Where(s => s.Id == model.Id).FirstOrDefault();
+            var exisingStudent = await _dBContext.Students.Where(s => s.Id == model.Id).FirstOrDefaultAsync();
 
             if (exisingStudent == null)
                 return NotFound();
@@ -190,7 +191,7 @@ namespace CollegeApp.Controllers
             exisingStudent.DOB = model.DOB;
 
 
-            _dBContext.SaveChanges();
+            await _dBContext.SaveChangesAsync();
 
             return NoContent(); // Kayit guncellendi kayit yok yani icerik geri dondurmemize gerek yoksa bu sekilde yazabiliriz
                                 // Geri donus 204 alicaz yani guncelleme basarili icerik yor
@@ -211,12 +212,12 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
-        public ActionResult UpdateStudentPartial(int id, [FromBody] JsonPatchDocument<StudentDTO> patchDocument)
+        public async Task<ActionResult> UpdateStudentPartial(int id, [FromBody] JsonPatchDocument<StudentDTO> patchDocument)
         {
             if (patchDocument == null || id <= 0)
                 BadRequest();
 
-            var exisingStudent = _dBContext.Students.Where(s => s.Id == id).FirstOrDefault();
+            var exisingStudent = await _dBContext.Students.Where(s => s.Id == id).FirstOrDefaultAsync();
 
             if (exisingStudent == null)
                 return NotFound();
@@ -249,7 +250,7 @@ namespace CollegeApp.Controllers
             //exisingStudent.AdmissionDate = studentdDTO.AdmissionDate;
 
 
-            _dBContext.SaveChanges();
+           await _dBContext.SaveChangesAsync();
 
             // 204 - NoContent
             return NoContent(); // Kayit guncellendi kayit yok yani icerik geri dondurmemize gerek yoksa bu sekilde yazabiliriz
@@ -267,13 +268,13 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
 
-        public ActionResult<StudentDTO> GeStudentByName(string name)
+        public async Task<ActionResult<StudentDTO>> GeStudentByName(string name)
         {
             // BadRequest - 400 - Badrequest - Client error
             if (string.IsNullOrEmpty(name))
                 return BadRequest();
 
-            var student = _dBContext.Students.Where(x => x.SutudentName == name).FirstOrDefault();
+            var student = await _dBContext.Students.Where(x => x.SutudentName == name).FirstOrDefaultAsync();
 
             if (student == null)
                 // NotFound - 404 - NotFound - Client error
@@ -300,20 +301,20 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
 
-        public ActionResult<bool> DeleteStudent(int id)
+        public async Task<ActionResult<bool>> DeleteStudent(int id)
         {
             // BadRequest - 400 - Badrequest - Client error
             if (id <= 0)
                 return BadRequest();
 
 
-            var student = _dBContext.Students.Where(x => x.Id == id).FirstOrDefault();
+            var student = await _dBContext.Students.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (student == null)
                 // NotFound - 404 - NotFound - Client error
                 return NotFound($"The student with id {id} not fount");
 
             _dBContext.Students.Remove(student);
-            _dBContext.SaveChanges();
+           await _dBContext.SaveChangesAsync();
 
             // Ok - 200 - Success
             return true;
