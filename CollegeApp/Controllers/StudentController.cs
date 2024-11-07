@@ -308,7 +308,7 @@ namespace CollegeApp.Controllers
                 return BadRequest();
 
 
-            var student = await _dBContext.Students.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var student = await _dBContext.Students.Where(x => x.Id == id).FirstOrDefaultAsync(); 
             if (student == null)
                 // NotFound - 404 - NotFound - Client error
                 return NotFound($"The student with id {id} not fount");
