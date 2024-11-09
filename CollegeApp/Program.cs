@@ -1,5 +1,8 @@
+using AutoMapper;
+using CollegeApp.Configuration;
 using CollegeApp.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -117,6 +120,28 @@ builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = tru
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+// AUTAMAPPER ;
+
+// Nugetten bunlarý kurduk ;
+// AutoMapper
+// AutoMapper.Extensions.Microsoft.DependencyInjection
+
+// Configuration adli klasör olustur ve bir class olusturup " AutoMapperConfig.cs : Profile " dan miras almali ve Constroctur oluþturup icerisine
+// CreateMap<Student, StudentDTO>(); eklemelisin sonra assagýdaki gibi
+
+
+
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 var app = builder.Build();
 

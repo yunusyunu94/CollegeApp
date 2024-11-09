@@ -89,7 +89,8 @@ namespace CollegeApp.Controllers
                 Id = student.Id,
                 SutudentName = student.SutudentName,
                 Address = student.Address,
-                Email = student.Email
+                Email = student.Email,
+                DOB = student.DOB,
             };
 
 

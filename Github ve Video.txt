@@ -26,7 +26,9 @@ https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetc
 
 
 32.video da Serilog u ogreldik
-Nugetten bunları kurduk
+
+Nugetten bunları kurduk ;
+
 Serilog.AspNetCore
 Serilog.Sinks.File
 
@@ -42,9 +44,20 @@ https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetc
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
+AutoMapper ;
 
+Önemli 48.video 
 
+https://www.youtube.com/watch?v=t6DciFNrwDg&list=PL3ewn8T-zRWgO-GAdXjVRh-6thRog6ddg&index=49&ab_channel=NehanthWorld
 
+Nugetten bunları kurduk ;
+AutoMapper
+AutoMapper.Extensions.Microsoft.DependencyInjection
+
+Site linki ;
+https://docs.automapper.org/en/stable/Configuration.html#assembly-scanning-for-auto-configuration
+linkteki AutoMapper (otomatik hatirlayıcı) için " Profile Instances " daki kodu Configuration adlı klasör oluştur ve bir class oluşturup AutoMapperConfig.cs 
+: Profile dan miras almalı ve Constroctur oluşturup içerisine CreateMap<Student, StudentDTO>(); eklemelisin
 
 
 
