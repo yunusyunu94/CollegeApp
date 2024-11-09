@@ -1,4 +1,5 @@
-﻿using CollegeApp.Data;
+﻿using AutoMapper;
+using CollegeApp.Data;
 using CollegeApp.Models;
 using CollegeApp.Models.Dtos.Student;
 using Dependency_Injection;
@@ -14,13 +15,16 @@ namespace CollegeApp.Controllers
     public class StudentController : ControllerBase
     {
 
-        private readonly IMyLogger _myLogger2;
+        private readonly ILogger<StudentController> _Logger;
+        private readonly ILogger<StudentController> logger;
         private readonly CollageDBContext _dBContext;
+        private readonly IMapper _mapper;
 
-        public StudentController(IMyLogger myLogger, CollageDBContext dBContext)
+        public StudentController(ILogger<StudentController> logger, CollageDBContext dBContext, IMapper _mapper)
         {
-            _myLogger2 = myLogger;
+            logger = logger;
             _dBContext = dBContext;
+            _mapper = _mapper;
         }
 
         [HttpGet]
@@ -30,9 +34,9 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
 
-        public ActionResult<IEnumerable<StudentDTO>> GeStudents()
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> GeStudents()
         {
-            _myLogger2.Log("Your Message");
+            //_Logger.Log("Your Message");
 
             //var students = new List<StudentDTO>();
             //foreach (var item in CollegeRepository.Students)
@@ -58,16 +62,19 @@ namespace CollegeApp.Controllers
             //    DOB= s.DOB,
             //});
 
-            var students = _dBContext.Students.Select(s => new StudentDTO()
-            {
-                Id = s.Id,
-                SutudentName = s.SutudentName,
-                Address = s.Address,
-                DOB = s.DOB
-            }).ToList();
+            //var students = await _dBContext.Students.Select(s => new StudentDTO()
+            //{
+            //    Id = s.Id,
+            //    SutudentName = s.SutudentName,
+            //    Address = s.Address,
+            //    DOB = s.DOB
+            //}).ToListAsync();
+
+            var students = await _dBContext.Students.ToListAsync();
+            var studentDTOData = _mapper.Map<List<StudentDTO>>(students);
 
             // Ok - 200 - Success
-            return Ok(students);
+            return Ok(studentDTOData);
 
         }
 
@@ -78,29 +85,30 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
 
-        public ActionResult<StudentDTO> GeStudentById(int id)
+        public async Task<ActionResult<StudentDTO>> GeStudentById(int id)
         {
             // BadRequest - 400 - Badrequest - Client error
             if (id <= 0)
                 return BadRequest();
 
-            var student = _dBContext.Students.Where(x => x.Id == id).FirstOrDefault();
+            var student = await _dBContext.Students.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (student == null)
                 // NotFound - 404 - NotFound - Client error
                 return NotFound($"The student with id {id} not fount");
 
+            var studentDTOData = _mapper.Map<StudentDTO>(student);
 
-            var studentsDTO = new StudentDTO()
-            {
-                Id = student.Id,
-                SutudentName = student.SutudentName,
-                Address = student.Address,
-                Email = student.Email
-            };
+            //var studentsDTO = new StudentDTO()
+            //{
+            //    Id = student.Id,
+            //    SutudentName = student.SutudentName,
+            //    Address = student.Address,
+            //    Email = student.Email
+            //};
 
 
             // Ok - 200 - Success
-            return Ok(studentsDTO);
+            return Ok(studentDTOData);
 
         }
 
@@ -114,7 +122,7 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)] // Kayıt olumlu 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
-        public ActionResult<StudentDTO> CreateStudent([FromBody] StudentDTO model) // FromBody Sadece govde den almak istiyorum
+        public async Task<ActionResult<StudentDTO>> CreateStudent([FromBody] StudentDTO dto) // FromBody Sadece govde den almak istiyorum
         {
             /// Validationlari;
 
@@ -129,7 +137,7 @@ namespace CollegeApp.Controllers
 
 
 
-            if (model == null)
+            if (dto == null)
                 return BadRequest();
 
             ///
@@ -150,28 +158,38 @@ namespace CollegeApp.Controllers
             ///
 
 
-            /*int newıd = _dBContext.Students.LastOrDefault().Id + 1*/
-            ; // İd yi elle 1 arttirdik
-            Student student = new Student
-            {
+            /*
+             * 
+             * int newıd = _dBContext.Students.LastOrDefault().Id + 1;  İd yi elle 1 arttirdik
+             * 
+             */
 
-                SutudentName = model.SutudentName,
-                Address = model.Address,
-                Email = model.Email,
-                DOB = model.DOB,
-            };
+            //Student student = new Student
+            //{
 
-            _dBContext.Students.Add(student);
+            //    SutudentName = dto.SutudentName,
+            //    Address = dto.Address,
+            //    Email = dto.Email,
+            //    DOB = dto.DOB,
+            //};
 
-            _dBContext.SaveChanges();
+
+
+
+            var student = _mapper.Map<Student>(dto);
+
+            await _dBContext.Students.AddAsync(student);
+
+            await _dBContext.SaveChangesAsync();
 
             // Status - 201
             // https://localhost:7185/api/Student/3
             // New student details
 
-            model.Id = student.Id;
+            //model.Id = student.Id;
+            dto.Id = student.Id;
 
-            return CreatedAtRoute("GeStudentById", new { İd = model.Id }, model); // Yeni olusturulan kaydi almak icin baglantiyi hazirlayacak
+            return CreatedAtRoute("GeStudentById", new { İd = dto.Id }, dto); // Yeni olusturulan kaydi almak icin baglantiyi hazirlayacak
             //return Ok(student);
         }
 
@@ -183,41 +201,40 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
-        public ActionResult UpdateStudent([FromBody] StudentDTO model)
+        public async Task<ActionResult> UpdateStudent([FromBody] StudentDTO dto)
         {
-            if (model == null || model.Id <= 0)
+            if (dto == null || dto.Id <= 0)
                 BadRequest();
 
-
-
-
-            var exisingStudent = _dBContext.Students.AsNoTracking().Where(s => s.Id == model.Id).FirstOrDefault();
+            var exisingStudent = await _dBContext.Students.AsNoTracking().Where(s => s.Id == dto.Id).FirstOrDefaultAsync();
 
             if (exisingStudent == null)
                 return NotFound();
 
             // Yeni ogrenci ekleyelim ;
-            var newRecord = new Student()
-            {
-                Id = exisingStudent.Id,
-                SutudentName = exisingStudent.SutudentName,
-                Address = exisingStudent.Address,
-                Email = exisingStudent.Email,
-                DOB = exisingStudent.DOB,
+            //var newRecord = new Student()
+            //{
+            //    Id = exisingStudent.Id,
+            //    SutudentName = exisingStudent.SutudentName,
+            //    Address = exisingStudent.Address,
+            //    Email = exisingStudent.Email,
+            //    DOB = exisingStudent.DOB,
 
-            };
+            //};
+
+            var newRecord = _mapper.Map<Student>(dto);
             _dBContext.Students.Update(newRecord);
             // Burada ayni ID oldugundan hata verecektir ama AsNoTracking yani takip etme dersek varlik cercevesi izleme altinda olmayacaktir ve hata vermicektir
 
 
 
-            //exisingStudent.SutudentName = model.SutudentName;
-            //exisingStudent.Email = model.Email;
-            //exisingStudent.Address = model.Address;
-            //exisingStudent.DOB = model.DOB;
+            //exisingStudent.SutudentName = dto.SutudentName;
+            //exisingStudent.Email = dto.Email;
+            //exisingStudent.Address = dto.Address;
+            //exisingStudent.DOB = dto.DOB;
 
 
-            _dBContext.SaveChanges();
+            await _dBContext.SaveChangesAsync();
 
             return NoContent(); // Kayit guncellendi kayit yok yani icerik geri dondurmemize gerek yoksa bu sekilde yazabiliriz
                                 // Geri donus 204 alicaz yani guncelleme basarili icerik yor
@@ -238,46 +255,51 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
-        public ActionResult UpdateStudentPartial(int id, [FromBody] JsonPatchDocument<StudentDTO> patchDocument)
+        public async Task<ActionResult> UpdateStudentPartial(int id, [FromBody] JsonPatchDocument<StudentDTO> patchDocument)
         {
             if (patchDocument == null || id <= 0)
                 BadRequest();
 
-            var exisingStudent = _dBContext.Students.Where(s => s.Id == id).FirstOrDefault();
+            var exisingStudent = await _dBContext.Students.AsNoTracking().Where(s => s.Id == id).FirstOrDefaultAsync();
 
             if (exisingStudent == null)
                 return NotFound();
 
 
-            var studentdDTO = new StudentDTO
-            {
-                Id = exisingStudent.Id,
-                SutudentName = exisingStudent.SutudentName,
-                Email = exisingStudent.Email,
-                Address = exisingStudent.Address,
-                DOB = exisingStudent.DOB,
-                //Age = exisingStudent.Age,
-                //Password = exisingStudent.Password,
-                //ConfirmPassword = exisingStudent.ConfirmPassword,
-                //AdmissionDate = exisingStudent.AdmissionDate,
-            };
+            //var studentdDTO = new StudentDTO
+            //{
+            //    Id = exisingStudent.Id,
+            //    SutudentName = exisingStudent.SutudentName,
+            //    Email = exisingStudent.Email,
+            //    Address = exisingStudent.Address,
+            //    DOB = exisingStudent.DOB,
+            //    //Age = exisingStudent.Age,
+            //    //Password = exisingStudent.Password,
+            //    //ConfirmPassword = exisingStudent.ConfirmPassword,
+            //    //AdmissionDate = exisingStudent.AdmissionDate,
+            //};
+
+            var studentdDTO = _mapper.Map<StudentDTO>(exisingStudent);
 
             patchDocument.ApplyTo(studentdDTO, ModelState);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            exisingStudent = _mapper.Map<Student>(studentdDTO);
 
-            exisingStudent.SutudentName = studentdDTO.SutudentName;
-            exisingStudent.Email = studentdDTO.Email;
-            exisingStudent.Address = studentdDTO.Address;
+            _dBContext.Students.Update(exisingStudent);
+
+            //exisingStudent.SutudentName = studentdDTO.SutudentName;
+            //exisingStudent.Email = studentdDTO.Email;
+            //exisingStudent.Address = studentdDTO.Address;
             //exisingStudent.Age = studentdDTO.Age;
             //exisingStudent.Password = studentdDTO.Password;
             //exisingStudent.ConfirmPassword = studentdDTO.ConfirmPassword;
             //exisingStudent.AdmissionDate = studentdDTO.AdmissionDate;
 
 
-            _dBContext.SaveChanges();
+            await _dBContext.SaveChangesAsync();
 
             // 204 - NoContent
             return NoContent(); // Kayit guncellendi kayit yok yani icerik geri dondurmemize gerek yoksa bu sekilde yazabiliriz
@@ -295,31 +317,32 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
 
-        public ActionResult<StudentDTO> GeStudentByName(string name)
+        public async Task<ActionResult<StudentDTO>> GeStudentByName(string name)
         {
             // BadRequest - 400 - Badrequest - Client error
             if (string.IsNullOrEmpty(name))
                 return BadRequest();
 
-            var student = _dBContext.Students.Where(x => x.SutudentName == name).FirstOrDefault();
+            var student = await _dBContext.Students.Where(x => x.SutudentName == name).FirstOrDefaultAsync();
 
             if (student == null)
                 // NotFound - 404 - NotFound - Client error
                 return NotFound($"The student with name {name} not fount");
 
 
-            var studentsDTO = new StudentDTO()
-            {
-                Id = student.Id,
-                SutudentName = student.SutudentName,
-                Address = student.Address,
-                Email = student.Email,
-                DOB = student.DOB,
-            };
+            //var studentsDTO = new StudentDTO()
+            //{
+            //    Id = student.Id,
+            //    SutudentName = student.SutudentName,
+            //    Address = student.Address,
+            //    Email = student.Email,
+            //    DOB = student.DOB,
+            //};
 
+            var studentDTOData = _mapper.Map<StudentDTO>(student);
 
             // Ok - 200 - Success
-            return Ok(studentsDTO);
+            return Ok(studentDTOData);
 
         }
 
@@ -329,20 +352,20 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Sunucu hatasi dahili sunucu hatasi
 
-        public ActionResult<bool> DeleteStudent(int id)
+        public async Task<ActionResult<bool>> DeleteStudent(int id)
         {
             // BadRequest - 400 - Badrequest - Client error
             if (id <= 0)
                 return BadRequest();
 
 
-            var student = _dBContext.Students.Where(x => x.Id == id).FirstOrDefault();
+            var student = await _dBContext.Students.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (student == null)
                 // NotFound - 404 - NotFound - Client error
                 return NotFound($"The student with id {id} not fount");
 
             _dBContext.Students.Remove(student);
-            _dBContext.SaveChanges();
+            await _dBContext.SaveChangesAsync();
 
             // Ok - 200 - Success
             return true;
